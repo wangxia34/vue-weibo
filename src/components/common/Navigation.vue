@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <div class="navigation">
         <ul class="navigation-ul">
-            <li v-for="item in items" class="navigation-li">
+            <router-link v-for="item in items" class="navigation-li" tag="li" :to="item.index">
                 <i class="icon iconfont" :class="item.icon"></i>
                 <div class="navigation-title">{{item.title}}</div>
-            </li>
+            </router-link>
         </ul>
     </div>
 </template>
@@ -21,7 +21,7 @@
                         title: '首页'
                     },
                     {
-                        icon: 'icon-shipin',
+                        icon: 'icon-shipin1',
                         index: 'videoPage',
                         title: '视频'
                     },
@@ -47,5 +47,19 @@
 </script>
 
 <style scoped>
+    .navigation {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+    }
+    .navigation-ul {
+        list-style-type: none;
 
+    }
+    .navigation-li {
+        display: inline-block;
+        width: 20%;
+        padding: 10px 0;
+    }
 </style>
