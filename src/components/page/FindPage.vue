@@ -1,94 +1,262 @@
 <template>
     <div>
         <div class="header-div">
-
+            <form action="javascript:;" id="searchFrom" @onsubmit="searchList">
+                <input type="search" class="header-input" placeholder="大家都在搜：今日新闻">
+            </form>
+        </div>
+        <div class="content-div">
+            <div class="FindPage-hot">
+                <div class="FindPage-hot-title">
+                    <span class="FindPage-title"><i class="icon iconfont icon-search"></i>微博热搜</span>
+                    <span class="FindPage-title-span">每分钟更新一次</span>
+                    <span class="FindPage-right-i"><i class="icon iconfont icon-xiangyou-copy"></i></span>
+                </div>
+                <div class="FindPage-hot-list">
+                    <ul>
+                        <li v-for="item in hotList"
+                            class="FindPage-hotList-li">
+                            <span>{{item.title}}</span>
+                            <span class="FindPage-hotList-span" :class="item.state">{{hotState[item.state]}}</span>
+                        </li>
+                        <li class="FindPage-hotList-li"><span class="FindPage-hotList-res">更多热搜 <i class="icon iconfont icon-xiangyou-copy"></i></span></li>
+                    </ul>
+                </div>
+                <div class="FindPage-hot-ad">
+                    <el-carousel height="12vh" :interval="5000" >
+                        <el-carousel-item v-for="item in 4" :key="item">
+                            <h3>{{ item }}</h3>
+                        </el-carousel-item>
+                    </el-carousel>
+                </div>
+            </div>
+            <div class="FindPage-list">
+                <div class="FindPage-list-nav">
+                    <div v-for="item in listNav" :class="item.state?'action-listNav':''">
+                        {{item.text}}
+                    </div>
+                </div>
+                <div class="FindPage-list-content">
+                    <v-page-content
+                            v-for="post in lists"
+                            :post="post"
+                            @delItem="deleteItem"
+                    > </v-page-content>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import vPageContent from '../common/PageContent.vue';
     export default {
         name: "find-page",
+        components: {
+            vPageContent
+        },
         data() {
             return {
-                restaurants: [],
-                state1: ''
+                hotList: [],
+                hotState: {
+                    "r": "热",
+                    "x": "新",
+                    "j": "荐"
+                },
+                listNav: [
+                    {text: "话题", index: "huati", state: true},
+                    {text: "榜单", index: "bangdan", state: false},
+                    {text: "成都", index: "chengdu", state: false},
+                    {text: "超话", index: "chaohua", state: false}
+                ],
+                lists: []
             }
         },
         methods: {
-            querySearch(queryString, cb) {
-                let restaurants = this.restaurants;
-                let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-                // 调用 callback 返回建议列表的数据
-                cb(results);
+            searchList() {
+
             },
-            createFilter(queryString) {
-                return (restaurant) => {
-                    return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-                };
-            },
-            handleSelect(item) {
-                console.log(item);
-            },
-            loadAll() {
-                return [
-                    { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
-                    { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" },
-                    { "value": "新旺角茶餐厅", "address": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
-                    { "value": "泷千家(天山西路店)", "address": "天山西路438号" },
-                    { "value": "胖仙女纸杯蛋糕（上海凌空店）", "address": "上海市长宁区金钟路968号1幢18号楼一层商铺18-101" },
-                    { "value": "贡茶", "address": "上海市长宁区金钟路633号" },
-                    { "value": "豪大大香鸡排超级奶爸", "address": "上海市嘉定区曹安公路曹安路1685号" },
-                    { "value": "茶芝兰（奶茶，手抓饼）", "address": "上海市普陀区同普路1435号" },
-                    { "value": "十二泷町", "address": "上海市北翟路1444弄81号B幢-107" },
-                    { "value": "星移浓缩咖啡", "address": "上海市嘉定区新郁路817号" },
-                    { "value": "阿姨奶茶/豪大大", "address": "嘉定区曹安路1611号" },
-                    { "value": "新麦甜四季甜品炸鸡", "address": "嘉定区曹安公路2383弄55号" },
-                    { "value": "Monica摩托主题咖啡店", "address": "嘉定区江桥镇曹安公路2409号1F，2383弄62号1F" },
-                    { "value": "浮生若茶（凌空soho店）", "address": "上海长宁区金钟路968号9号楼地下一层" },
-                    { "value": "NONO JUICE  鲜榨果汁", "address": "上海市长宁区天山西路119号" },
-                    { "value": "CoCo都可(北新泾店）", "address": "上海市长宁区仙霞西路" },
-                    { "value": "快乐柠檬（神州智慧店）", "address": "上海市长宁区天山西路567号1层R117号店铺" },
-                    { "value": "Merci Paul cafe", "address": "上海市普陀区光复西路丹巴路28弄6号楼819" },
-                    { "value": "猫山王（西郊百联店）", "address": "上海市长宁区仙霞西路88号第一层G05-F01-1-306" },
-                    { "value": "枪会山", "address": "上海市普陀区棕榈路" },
-                    { "value": "纵食", "address": "元丰天山花园(东门) 双流路267号" },
-                    { "value": "钱记", "address": "上海市长宁区天山西路" },
-                    { "value": "壹杯加", "address": "上海市长宁区通协路" },
-                    { "value": "唦哇嘀咖", "address": "上海市长宁区新泾镇金钟路999号2幢（B幢）第01层第1-02A单元" },
-                    { "value": "爱茜茜里(西郊百联)", "address": "长宁区仙霞西路88号1305室" },
-                    { "value": "爱茜茜里(近铁广场)", "address": "上海市普陀区真北路818号近铁城市广场北区地下二楼N-B2-O2-C商铺" },
-                    { "value": "鲜果榨汁（金沙江路和美广店）", "address": "普陀区金沙江路2239号金沙和美广场B1-10-6" },
-                    { "value": "开心丽果（缤谷店）", "address": "上海市长宁区威宁路天山路341号" },
-                    { "value": "超级鸡车（丰庄路店）", "address": "上海市嘉定区丰庄路240号" },
-                    { "value": "妙生活果园（北新泾店）", "address": "长宁区新渔路144号" },
-                    { "value": "香宜度麻辣香锅", "address": "长宁区淞虹路148号" },
-                    { "value": "凡仔汉堡（老真北路店）", "address": "上海市普陀区老真北路160号" },
-                    { "value": "港式小铺", "address": "上海市长宁区金钟路968号15楼15-105室" },
-                    { "value": "蜀香源麻辣香锅（剑河路店）", "address": "剑河路443-1" },
-                    { "value": "北京饺子馆", "address": "长宁区北新泾街道天山西路490-1号" },
-                    { "value": "饭典*新简餐（凌空SOHO店）", "address": "上海市长宁区金钟路968号9号楼地下一层9-83室" },
-                    { "value": "焦耳·川式快餐（金钟路店）", "address": "上海市金钟路633号地下一层甲部" },
-                    { "value": "动力鸡车", "address": "长宁区仙霞西路299弄3号101B" },
-                    { "value": "浏阳蒸菜", "address": "天山西路430号" },
-                    { "value": "四海游龙（天山西路店）", "address": "上海市长宁区天山西路" },
-                    { "value": "樱花食堂（凌空店）", "address": "上海市长宁区金钟路968号15楼15-105室" },
-                    { "value": "壹分米客家传统调制米粉(天山店)", "address": "天山西路428号" },
-                    { "value": "福荣祥烧腊（平溪路店）", "address": "上海市长宁区协和路福泉路255弄57-73号" },
-                    { "value": "速记黄焖鸡米饭", "address": "上海市长宁区北新泾街道金钟路180号1层01号摊位" },
-                    { "value": "红辣椒麻辣烫", "address": "上海市长宁区天山西路492号" },
-                    { "value": "(小杨生煎)西郊百联餐厅", "address": "长宁区仙霞西路88号百联2楼" },
-                    { "value": "阳阳麻辣烫", "address": "天山西路389号" },
-                    { "value": "南拳妈妈龙虾盖浇饭", "address": "普陀区金沙江路1699号鑫乐惠美食广场A13" }
-                ];
+            deleteItem(id) {
+                let that = this;
+                that.lists.map(function (value, key) {
+                    if (value.id === id) {
+                        that.lists.splice(key, 1);
+                    }
+                });
             }
         },
         mounted() {
-            this.restaurants = this.loadAll();
+
+        },
+        created() {
+            let url = "https://www.easy-mock.com/mock/5c073d6f44a4ce28155b1d1b/weibo/weibo/hot_list";
+            this.$axios.post(url).then((res) => {
+                this.hotList = res.data.data;
+            });
+
+            let url2 = "https://www.easy-mock.com/mock/5c073d6f44a4ce28155b1d1b/weibo/weibo/home_list";
+            this.$axios.post(url2).then((res) => {
+                this.lists = res.data.data;
+            })
         }
     }
 </script>
 
 <style scoped>
+    ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+        text-align: center;
+    }
+    :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        text-align: center;
+    }
+    ::-moz-placeholder { /* Mozilla Firefox 19+ */
+        text-align: center;
+    }
+    .header-div {
+        width: 100%;
+        text-align: center;
+        line-height: 8vh;
+        border-bottom: 1px solid #e0e0e0;
+        background-color: white;
+    }
+    .content-div {
+        background-color: #dcdbdbba;
+    }
+    .header-input {
+        width: 90vw;
+        display: inline-block;
+        height: 5vh;
+        border: none;
+        border-radius: 1.5vw;
+        background-color: #d8d8d8;
+        font-size: 0.8rem;
+        outline:none;
+    }
+    .FindPage-hot {
+        width: 100%;
+        background-color: white;
+        padding-bottom: 1.5vh;
+    }
+    .FindPage-hot-title {
+        width: 100%;
+        height: 7vh;
+        line-height: 7vh;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    .FindPage-title {
+        margin-left: 2vw;
+        font-size: 1.1rem;
+    }
+    .FindPage-title i {
+        color: #df5f06;
+        font-size: 1.3rem;
+        margin: 0 1vw;
+    }
+    .FindPage-title-span {
+        font-size: 0.8rem;
+        color: #8f8f8f;
+        margin-left: 1vw;
+    }
+    .FindPage-right-i {
+        margin-right: 2vw;
+        float: right;
+        color: #8f8f8f;
+    }
+    .FindPage-right-i i {
+        font-size: 0.9rem;
+    }
+    .FindPage-hot-list {
+        width: 100%;
+        padding-top: 2vh;
+    }
+    .FindPage-hotList-li {
+        width: 50vw;
+        display: inline-block;
+        box-sizing: border-box;
+        padding: 0 3vw 0 4vw;
+        font-size: 1rem;
+    }
+    .FindPage-hotList-li span {
+        display: inline-block;
+    }
+    .FindPage-hotList-li span:first-child {
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+        height: 4vh;
+        line-height: 4vh;
+        max-width: 80%;
+    }
+    .FindPage-hotList-span {
+        position: relative;
+        top: -1.7vh;
+        left: 1vw;
+        font-size: 0.7rem;
+        width: 4vw;
+        height: 4vw;
+        color: white;
+        line-height: 4vw;
+        text-align: center;
+        border-radius: 0.8vw;
+    }
+    .r {
+        background-color: #df780e;
+    }
+    .x {
+        background-color: #d31f1f;
+    }
+    .j {
+        background-color: #409EFF;
+    }
+    .FindPage-hotList-res {
+        color: #df780e;
+    }
+    .FindPage-hotList-res i {
+        font-size: 1.1rem;
+    }
+    .FindPage-hot-ad {
+        width: 95vw;
+        margin: 0 auto;
+    }
+    .FindPage-list {
+        width: 100%;
+        margin-top: 2vh;
+        background-color: white;
+    }
+    .FindPage-list-nav {
+        width: 80vw;
+        margin: 0 auto;
+        display: flex;
+        color: #8f8f8f;
+        border-bottom: 1px solid #d8d8d8;
+    }
+    .FindPage-list-nav div {
+        display: inline-block;
+        flex: 1;
+        height: 7vh;
+        line-height: 7vh;
+        text-align: center;
+    }
+    .action-listNav {
+        color: black;
+        border-bottom: 2px solid #df5f06;
+    }
+
+    .el-carousel__item h3 {
+        color: #475669;
+        font-size: 14px;
+        opacity: 0.75;
+        line-height: 10vh;
+        width: 80vw;
+        margin: 0;
+    }
+
+    .el-carousel__item:nth-child(2n) {
+        background-color: #99a9bf;
+    }
+
+    .el-carousel__item:nth-child(2n+1) {
+        background-color: #d3dce6;
+    }
 
 </style>

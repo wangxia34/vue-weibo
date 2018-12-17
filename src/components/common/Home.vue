@@ -22,5 +22,7 @@
 </script>
 
 <style scoped>
-
+    .content {
+        height: 92vh;
+    }
 </style>

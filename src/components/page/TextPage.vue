@@ -41,7 +41,7 @@
                 <span><i class="icon iconfont icon-pinglun"></i></span>
                 <span class="textPage-foot-num">评论</span>
             </div>
-            <div>
+            <div @click="setZan" :class="{'trueZan': textContent.isZan}">
                 <span><i class="icon iconfont icon-zan"></i></span>
                 <span class="textPage-foot-num">赞</span>
             </div>
@@ -76,6 +76,9 @@
                 for (let k in this.commentP) {
                     this.commentP[k].class = k === index ? "comment-action" : ""
                 }
+                if (index === "text") {
+                    this.commentP.isPinglun.class = "comment-action";
+                }
             },
             getCommentList(index) {
                 let url = "https://www.easy-mock.com/mock/5c073d6f44a4ce28155b1d1b/weibo/weibo/comment_list";
@@ -101,7 +104,11 @@
                         })
                     }
                 }
-            }
+            },
+            setZan() {
+                this.textContent.dianzan = this.textContent.isZan ? this.textContent.dianzan - 1 : this.textContent.dianzan + 1;
+                this.textContent.isZan = !this.textContent.isZan;
+            },
         },
         mounted() {
             this.scroll()
@@ -109,6 +116,7 @@
         created() {
             this.textContent = this.$route.params.content;
             this.textContent.isText = true;
+            this.changeCommentItem(this.$route.params.index);
             this.getCommentList(this.textContent.index);
         }
     }
@@ -168,5 +176,7 @@
     .textPage-foot-num {
         font-size: 0.8rem;
     }
-
+    .trueZan {
+        color: #df5f06;
+    }
 </style>

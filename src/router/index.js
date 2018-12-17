@@ -51,6 +51,11 @@ export default new Router({
             path: '/textPage',
             component: TextPage,
             name: "textPage"
+        },
+        {
+            path: '/userPage',
+            component: resolve => require(['../components/page/UserPage.vue'], resolve),
+            name: "userPage"
         }
     ]
 })

@@ -22,6 +22,7 @@
             <v-page-content
                     v-for="post in homeList"
                     :post="post"
+                    @delItem="deleteItem"
             > </v-page-content>
         </div>
     </div>
@@ -95,6 +96,14 @@
                         })
                     }
                 }
+            },
+            deleteItem(id) {
+                let that = this;
+                that.homeList.map(function (value, key) {
+                    if (value.id === id) {
+                        that.homeList.splice(key, 1);
+                    }
+                });
             }
         },
         mounted() {
