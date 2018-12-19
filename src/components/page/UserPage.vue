@@ -58,6 +58,11 @@
                 </keep-alive>
             </transition>
         </div>
+        <div class="user-foot">
+            <div><i class="icon iconfont icon-fenlei"></i>特别关注</div>
+            <div>私信</div>
+            <div><i class="icon iconfont icon-fenlei"></i>他的热门</div>
+        </div>
     </div>
 </template>
 
@@ -286,5 +291,25 @@
     .user-content {
         background-color: rgba(220, 219, 219, 0.44);
         padding-top: 0.01rem;
+        padding-bottom: 6vh;
+    }
+    .user-foot {
+        border-top: 1px solid #e8e8e8;
+        position: fixed;
+        bottom: 0;
+        height: 7vh;
+        line-height: 7vh;
+        background-color: white;
+        display: flex;
+        font-size: 0.9rem;
+        width: 100%;
+    }
+    .user-foot i {
+        font-size: 0.9rem;
+    }
+    .user-foot>div {
+        flex: 1;
+        display: inline-block;
+        text-align: center;
     }
 </style>

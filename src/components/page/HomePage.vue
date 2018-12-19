@@ -18,7 +18,7 @@
                 {{item.name}}
             </span>
         </div>
-        <div class="content-div">
+        <div class="content-div" id="content_div">
             <v-page-content
                     v-for="post in homeList"
                     :post="post"
@@ -85,7 +85,7 @@
                     url = "https://www.easy-mock.com/mock/5c073d6f44a4ce28155b1d1b/weibo/weibo/home_list";
                 window.onscroll = () => {
                     // 距离底部200px时加载一次
-                    let bottomOfWindow = document.documentElement.offsetHeight - document.documentElement.scrollTop - window.innerHeight <= 200;
+                    let bottomOfWindow = document.documentElement.scrollHeight - document.documentElement.scrollTop - window.innerHeight <= 200;
                     if (bottomOfWindow && isLoading === false) {
                         isLoading = true;
                         this.$axios.post(url, {
